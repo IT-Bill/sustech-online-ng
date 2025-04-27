@@ -1,34 +1,21 @@
 <template>
-  <div v-for="menu in dailyMenus" :key="menu.canteen_id">
-    <img class="menu-img" :src="menu.url" :alt="menu.canteen_id" sizes="width=200px">
+  <div v-for="menu in dailyMenus" :key="menu">
+    <img class="menu-img" :src="menu" :alt="'食堂菜单'" loading="lazy">
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { ref } from 'vue';
 
 export default {
   name: 'Menu',
   setup() {
-    const dailyMenus = ref([]);
-
-    const getDailyMenus = () => {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      const day = String(currentDate.getDate()).padStart(2, '0');
-
-      axios.get(`https://susteen.itbill.cn/api/v1/menu/${year}/${month}/${day}`)
-        .then((res) => {
-          dailyMenus.value = res.data.data;
-        })
-        .catch(error => console.log("Error in Menu: " + error));
-    };
-
-    onMounted(() => {
-      getDailyMenus();
-    });
+    const dailyMenus = ref([
+      "https://i.postimg.cc/0Q1JDSBK/1.png",
+      "https://i.postimg.cc/wv5RVBCf/2.png",
+      "https://i.postimg.cc/brzDFh8z/3.png",
+      "https://i.postimg.cc/Ls11JDNM/4.png"
+    ]);
 
     return {
       dailyMenus,
@@ -38,9 +25,9 @@ export default {
 </script>
 
 <style scoped>
-
 .menu-img {
   margin-bottom: 2rem;
+  max-width: 100%;
+  height: auto;
 }
-
 </style>

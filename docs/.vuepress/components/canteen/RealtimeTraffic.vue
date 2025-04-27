@@ -18,15 +18,101 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { ref } from 'vue';
 
 export default {
   name: "RealtimeTraffic",
   data() {
     return {
-      baseUrl: "https://susteen.itbill.cn/api/v1/traffic",
-      trafficList: [],
+      trafficList: [
+        {
+          canteen_id: 1,
+          canteen_name: "荔园食堂",
+          canteen_en_name: "Liyuan Canteen",
+          avg_number: 15.75,
+          time: "2025-04-28T12:59:00",
+          booth_traffic: [
+            {
+              booth_id: 101,
+              booth_name: "粤式烧腊",
+              booth_en_name: "Cantonese BBQ",
+              avg_number: 12
+            },
+            {
+              booth_id: 102,
+              booth_name: "麻辣香锅",
+              booth_en_name: "Spicy Pot",
+              avg_number: 18
+            },
+            {
+              booth_id: 103,
+              booth_name: "西式快餐",
+              booth_en_name: "Western Fast Food",
+              avg_number: 15
+            }
+          ]
+        },
+        {
+          canteen_id: 2,
+          canteen_name: "学生餐厅",
+          canteen_en_name: "Student Canteen",
+          avg_number: 18.33,
+          time: "2025-04-28T12:59:00",
+          booth_traffic: [
+            {
+              booth_id: 201,
+              booth_name: "川菜",
+              booth_en_name: "Sichuan Cuisine",
+              avg_number: 19
+            },
+            {
+              booth_id: 202,
+              booth_name: "自助餐",
+              booth_en_name: "Buffet",
+              avg_number: 16
+            },
+            {
+              booth_id: 203,
+              booth_name: "面食窗口",
+              booth_en_name: "Noodle Bar",
+              avg_number: 20
+            }
+          ]
+        },
+        {
+          canteen_id: 3,
+          canteen_name: "二期餐厅",
+          canteen_en_name: "Phase II Canteen",
+          avg_number: 13.25,
+          time: "2025-04-28T12:59:00",
+          booth_traffic: [
+            {
+              booth_id: 301,
+              booth_name: "湘菜",
+              booth_en_name: "Hunan Cuisine",
+              avg_number: 11
+            },
+            {
+              booth_id: 302,
+              booth_name: "水饺",
+              booth_en_name: "Dumplings",
+              avg_number: 14
+            },
+            {
+              booth_id: 303,
+              booth_name: "清真窗口",
+              booth_en_name: "Halal Food",
+              avg_number: 13
+            },
+            {
+              booth_id: 304,
+              booth_name: "小炒",
+              booth_en_name: "Stir-fry",
+              avg_number: 15
+            }
+          ]
+        }
+      ],
       formatter: new Intl.DateTimeFormat('zh-CN', {
         hour12: false,
         year: 'numeric',
@@ -39,32 +125,7 @@ export default {
     };
   },
 
-  mounted() {
-    this.getTrafficList();
-  },
-
   methods: {
-    async getTrafficList() {
-      try {
-        const res = await axios.get(this.baseUrl + "/canteens");
-        this.trafficList = res.data.data;
-
-        const trafficPromises = this.trafficList.map(elem =>
-          axios.get(`${this.baseUrl}/canteens/${elem.canteen_id}`)
-        );
-
-        const trafficResults = await Promise.all(trafficPromises);
-
-        this.trafficList = this.trafficList.map((elem, index) => {
-          return {
-            ...elem,
-            booth_traffic: trafficResults[index].data.data
-          };
-        });
-      } catch (error) {
-        console.error("Error fetching traffic data:", error);
-      }
-    },
     timeFormat(time) {
       const t = new Date(time);
       return this.formatter.format(t);
